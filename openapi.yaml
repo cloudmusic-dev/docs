@@ -71,8 +71,24 @@ paths:
             type: string
       responses:
         '200':
-          description: Playlist was deleted
-    put:
+          description: Playlist was deleted.
+    patch:
+      summary: Edit the playlist
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+      responses:
+        '200':
+          description: Playlist was edited.
+    post:
       summary: Add a song to the playlist
       parameters:
         - in: path
@@ -91,6 +107,80 @@ paths:
       responses:
         '200':
           description: Song added
+  /folder:
+    post:
+      summary: Create a new folder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Folder'
+      responses:
+        '200':
+          description: Playlist created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folder'
+  /folder/{folderId}:
+    post:
+      summary: Add a playlist to the given folder
+      parameters:
+        - in: path
+          name: folderId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                playlistId:
+                  type: string
+      responses:
+        '200':
+          description: The playlist was added successfully.
+    patch:
+      summary: Change the folder
+      parameters:
+        - in: path
+          name: folderId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Folder'
+      responses:
+        '200':
+          description: The folder was edited.
+    delete:
+      summary: Delete the folder. If the folder is children they will be deleted too.
+      parameters:
+        - in: path
+          name: folderId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The folder was deleted.
+  /folders:
+    get:
+      summary: Get a list of all folders
+      responses:
+        '200':
+          description: A list of all folders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Folder'
   /song/{songId}:
     get:
       summary: Download the song by the given id
@@ -125,6 +215,22 @@ paths:
       responses:
         '200':
           description: The song was uploaded successfully
+    patch:
+      summary: Update the song.
+      parameters:
+        - in: path
+          name: songId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
+      responses:
+        '200':
+          description: The song was updated.
     delete:
       summary: Removes the specified song.
       parameters:
@@ -241,6 +347,15 @@ components:
         cover:
           type: string
           description: 'id of the cover art'
+    Folder:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        parentFolder:
+          type: string
   securitySchemes:
     CloudMusic Auth:
       type: apiKey
