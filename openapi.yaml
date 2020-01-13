@@ -9,15 +9,11 @@ info:
     email: cloudmusic@krypton.dev
   license:
     name: MIT
-    url: ''
 tags: []
 paths:
   /playlists:
     get:
       summary: Receive the current user playlists
-      description: ''
-      parameters: []
-      operationId: ''
       responses:
         '200':
           description: List of playlists
@@ -25,11 +21,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Playlist'
+  /playlist:
     post:
       summary: Create a new playlist
-      description: ''
-      parameters: []
-      operationId: ''
       responses:
         '200':
           description: Playlist created
@@ -44,25 +38,119 @@ paths:
               $ref: '#/components/schemas/Playlist'
         required: true
         description: The playlist which should get created.
+  /playlist/{playlistId}:
+    get:
+      summary: Get the content of the playlist
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Information about the playlist and all songs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  playlist:
+                    $ref: '#/components/schemas/Plalist'
+                  songs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Song'
+    delete:
+      summary: Removes the specified playlist
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Playlist was deleted
+  /song/{songId}:
+    get:
+      summary: Download the song by the given id
+      parameters:
+        - in: path
+          name: songId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The song in mp3 format
+          content:
+              audio/mpeg:
+                schema: 
+                  type: string
+                  format: binary
+    put:
+      summary: Uploads the song itself
+      parameters:
+        - in: path
+          name: songId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The song was uploaded successfully
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+    delete:
+      summary: Removes the specified song.
+      parameters:
+        - in: path
+          name: songId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Song was deleted
+  /song:
+    post:
+      summary: Create a new song. After creating a song a put request with the file is expected, if this doesn't happen the song will get deleted automatically.
+      responses:
+        '200':
+          description: Song was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
   /login:
     post:
       summary: Try login a user
-      description: ''
-      parameters: []
-      operationId: ''
       responses:
         '200':
           description: 'Provided login details are correct, and the user object is returned'
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/User'
+                type: object
+                properties:
+                  apiKey:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
         '403':
           description: Invalid login details provided
       requestBody:
         content:
           application/json:
-            required: false
             schema:
               type: object
               properties:
@@ -70,6 +158,32 @@ paths:
                   type: string
                 password:
                   type: string
+        required: true
+      security: []
+  /register:
+    put:
+      summary: Creates a new user account
+      responses:
+        '201':
+          description: 'Account created successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKey:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '200':
+          description: 'Account couldnt be created.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
       security: []
 components:
   schemas:
@@ -90,6 +204,23 @@ components:
           type: string
         displayName:
           type: string
+    Song:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        artists:
+          type: array
+          items:
+            type: string
+        duration:
+          type: number
+          description: 'in seconds'
+        cover:
+          type: string
+          description: 'id of the cover art'
   securitySchemes:
     CloudMusic Auth:
       type: apiKey
