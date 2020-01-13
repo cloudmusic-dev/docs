@@ -72,6 +72,25 @@ paths:
       responses:
         '200':
           description: Playlist was deleted
+    put:
+      summary: Add a song to the playlist
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                songId: 
+                  type: string
+      responses:
+        '200':
+          description: Song added
   /song/{songId}:
     get:
       summary: Download the song by the given id
@@ -97,14 +116,15 @@ paths:
           required: true
           schema:
             type: string
-      responses:
-        '200':
-          description: The song was uploaded successfully
-          content:
+      requestBody:
+        content:
             application/octet-stream:
               schema:
                 type: string
                 format: binary
+      responses:
+        '200':
+          description: The song was uploaded successfully
     delete:
       summary: Removes the specified song.
       parameters:
