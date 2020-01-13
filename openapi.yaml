@@ -41,7 +41,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/Playlist'
         required: true
         description: The playlist which should get created.
   /login:
@@ -53,6 +53,10 @@ paths:
       responses:
         '200':
           description: 'Provided login details are correct, and the user object is returned'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/User'
         '403':
           description: Invalid login details provided
       requestBody:
@@ -79,6 +83,13 @@ components:
         createdAt:
           type: string
           format: date-time
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
   securitySchemes:
     CloudMusic Auth:
       type: apiKey
