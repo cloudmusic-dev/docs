@@ -1,0 +1,90 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: ''
+  version: 1.0.0
+  title: CloudMusic API
+  termsOfService: 'https://krypton.dev/terms/'
+  contact:
+    email: cloudmusic@krypton.dev
+  license:
+    name: MIT
+    url: ''
+tags: []
+paths:
+  /playlists:
+    get:
+      summary: Receive the current user playlists
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        '200':
+          description: List of playlists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+    post:
+      summary: Create a new playlist
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        '200':
+          description: Playlist created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+        description: The playlist which should get created.
+  /login:
+    post:
+      summary: Try login a user
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        '200':
+          description: 'Provided login details are correct, and the user object is returned'
+        '403':
+          description: Invalid login details provided
+      requestBody:
+        content:
+          application/json:
+            required: false
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      security: []
+components:
+  schemas:
+    Playlist:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+  securitySchemes:
+    CloudMusic Auth:
+      type: apiKey
+      name: api_key
+      in: header
+  links: {}
+  callbacks: {}
+security:
+  - CloudMusic Auth: []
