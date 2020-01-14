@@ -56,7 +56,7 @@ paths:
                 type: object
                 properties:
                   playlist:
-                    $ref: '#/components/schemas/Plalist'
+                    $ref: '#/components/schemas/Playlist'
                   songs:
                     type: array
                     items:
@@ -159,7 +159,7 @@ paths:
         '200':
           description: The folder was edited.
     delete:
-      summary: Delete the folder. If the folder is children they will be deleted too.
+      summary: Delete the folder. If the folder has children they will be deleted too.
       parameters:
         - in: path
           name: folderId
